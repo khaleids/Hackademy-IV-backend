@@ -1,6 +1,8 @@
 package io.orten.nano.util;
 
+import io.orten.nano.model.Donor;
 import io.orten.nano.model.Organization;
+import io.orten.nano.model.Project;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -131,5 +133,57 @@ public class Database {
         }
         Session session = sessionFactory.openSession();
         return session;
+    }
+    /* Method  return sum of donated amount for each project based on
+ * based on Project ID and calculate it's percentage
+ */
+    public static double getSumOfAmountFunded(int projectID)  {
+
+        if(sessionFactory == null){
+            init();
+        }
+        double result=0.0, amoutToBeRaised=0.0,progressPerPercentage=0.0;
+        try(Session s=sessionFactory.openSession()){
+            s.getTransaction();
+            String sumHql = "SELECT SUM(t.amount) FROM  Transaction t WHERE t.project.projectID = :projectID";
+            Query sumQuery = s.createQuery(sumHql);
+            sumQuery.setParameter("projectID",projectID);
+            result= (Double)sumQuery.list().get(0);
+            try {
+                progressPerPercentage= ( result/ searchOneProject(projectID).getAmountToBeRaised()) * 100;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return progressPerPercentage;
+    }
+    ///Method for search specific project base on project_ID and display
+    public static Project searchOneProject(int projectID) throws  Exception{
+
+        if(sessionFactory==null) {
+            init();
+        }
+        Project result = null;
+        try(Session s=sessionFactory.openSession()){
+            s.beginTransaction();
+            Project model=(Project)s.get(Project.class,projectID);
+            result=model;
+        }
+        return result;
+    }
+    //Method for displaying all list  projects
+    public static  List<Donor> getListOfTransaction() throws Exception {
+
+        if(sessionFactory == null) {
+            init();
+        }
+        List<Donor> donors = null;
+        try(Session s=sessionFactory.openSession()){
+            s.getTransaction();
+            String hql = "from Donor d";
+            donors = s.createQuery(hql).list();
+        }
+        return donors;
+
     }
 }

@@ -29,6 +29,5 @@
         <mapping class="io.orten.nano.model.Project"/>
         <mapping class="io.orten.nano.model.User"/>
         <mapping class="io.orten.nano.model.Event"/>
-
     </session-factory>
 </hibernate-configuration>

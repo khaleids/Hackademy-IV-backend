@@ -1,7 +1,8 @@
 package io.orten.nano.business;
 
-import io.orten.nano.impl.UserService;
-import io.orten.nano.model.User;
+import io.orten.nano.impl.DonorService;
+import io.orten.nano.model.Donor;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -12,7 +13,7 @@ import java.util.List;
 @Path("/users")
 public class UserAPI {
 
-    public static List<User> userList = new ArrayList<User>();
+    public static List<Donor> donorList = new ArrayList<Donor>();
 
     @GET
     @Path("/{userId}")
@@ -30,8 +31,8 @@ public class UserAPI {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers() {
         try {
-            List<User> users = UserService.getUsers();
-            return Response.status(HttpServletResponse.SC_OK).entity(users).build();
+            List<Donor> donors = DonorService.getUsers();
+            return Response.status(HttpServletResponse.SC_OK).entity(donors).build();
         } catch (Exception e) {
             return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).build();
         }
@@ -53,7 +54,7 @@ public class UserAPI {
     @Consumes(MediaType.APPLICATION_JSON)
         public Response saveUser(User user) {
         try {
-            UserService.saveUser(user);
+            DonorService.saveUser(donor);
             return Response.status(HttpServletResponse.SC_OK).build();
         } catch (Exception e) {
             return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).build();
